@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./database/connection";
 import userRoutes from "./routes/user.routes";
+import { seedInitialUsers } from "./seed/users";
 
 
 dotenv.config();
@@ -14,6 +15,9 @@ app.use(express.json());
 
 
 connectDB();
+
+// Seed the users to database
+seedInitialUsers();
 
 app.use('/users', userRoutes);
 
