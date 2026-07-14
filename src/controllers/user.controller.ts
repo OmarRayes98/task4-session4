@@ -6,10 +6,7 @@ import User from "../models/user.model";
 import { userValidationSchema } from "../validations/user.schema";
 import { generateJWT } from "../utils/jwt";
 
-// const hashPassword = async (password: string): Promise<string> => {
-//   const saltRounds = 10;
-//   return bcrypt.hash(password, saltRounds);
-// };
+
 
 // Register a new user
 export const registerUser = async (
@@ -18,7 +15,6 @@ export const registerUser = async (
 ): Promise<void> => {
   try {
     const validatedData = userValidationSchema.parse(req.body);
-    // const hashedPassword = await hashPassword(validatedData.password);
 
     const newUser = new User({ ...validatedData });
     await newUser.save();
@@ -110,7 +106,6 @@ export const createUser = async (
   try {
     // Validate request body using Zod
     const validatedData = userValidationSchema.parse(req.body);
-    // const hashedPassword = await hashPassword(validatedData.password);
 
     const newUser = new User({ ...validatedData });
     await newUser.save();
@@ -219,7 +214,6 @@ export const updateUser = async (
       typeof updateData.password === "string" &&
       updateData.password.trim() !== ""
     ) {
-      // updateData.password = await hashPassword(updateData.password);
     }
 
     const updatedUser = await User.findByIdAndUpdate(id, updateData, {
