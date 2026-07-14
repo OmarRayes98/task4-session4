@@ -5,20 +5,17 @@ import { z } from "zod";
 import User from "../models/user.model";
 import { userValidationSchema } from "../validations/user.schema";
 import { generateJWT } from "../utils/jwt";
+import { RegisterRequest } from "../types/user.controller";
 
-// const hashPassword = async (password: string): Promise<string> => {
-//   const saltRounds = 10;
-//   return bcrypt.hash(password, saltRounds);
-// };
+
 
 // Register a new user
 export const registerUser = async (
-  req: Request,
+  req: RegisterRequest,
   res: Response,
 ): Promise<void> => {
   try {
     const validatedData = userValidationSchema.parse(req.body);
-    // const hashedPassword = await hashPassword(validatedData.password);
 
     const newUser = new User({ ...validatedData });
     await newUser.save();
@@ -104,13 +101,14 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 // Create a new user
 export const createUser = async (
-  req: Request,
+  req: RegisterRequest,
   res: Response,
 ): Promise<void> => {
+  
   try {
+    
     // Validate request body using Zod
     const validatedData = userValidationSchema.parse(req.body);
-    // const hashedPassword = await hashPassword(validatedData.password);
 
     const newUser = new User({ ...validatedData });
     await newUser.save();
@@ -219,7 +217,6 @@ export const updateUser = async (
       typeof updateData.password === "string" &&
       updateData.password.trim() !== ""
     ) {
-      // updateData.password = await hashPassword(updateData.password);
     }
 
     const updatedUser = await User.findByIdAndUpdate(id, updateData, {
@@ -276,3 +273,5 @@ export const deleteUser = async (
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
