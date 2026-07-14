@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema(
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+}
+
+const userSchema = new mongoose.Schema<IUser>(
   {
     name: {
       type: String,
