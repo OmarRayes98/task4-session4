@@ -11,12 +11,13 @@ import {
 } from "../controllers/user.controller";
 import validateJWT from "../middleware/validateJWT";
 import { authorizeRole } from "../middleware/authorizeRole";
+import { createRateLimiter } from "../middleware/limitRate";
 
 const router = Router();
 
 // Routes
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+router.post("/register",createRateLimiter(3), registerUser);
+router.post("/login", createRateLimiter(5,true), loginUser);
 router.post("/", validateJWT, createUser);
 router.get("/", getAllUsers);
 
