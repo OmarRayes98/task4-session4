@@ -5,12 +5,13 @@ import { z } from "zod";
 import User from "../models/user.model";
 import { userValidationSchema } from "../validations/user.schema";
 import { generateJWT } from "../utils/jwt";
+import { RegisterRequest } from "../types/user.controller";
 
 
 
 // Register a new user
 export const registerUser = async (
-  req: Request,
+  req: RegisterRequest,
   res: Response,
 ): Promise<void> => {
   try {
@@ -100,10 +101,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 // Create a new user
 export const createUser = async (
-  req: Request,
+  req: RegisterRequest,
   res: Response,
 ): Promise<void> => {
+  
   try {
+    
     // Validate request body using Zod
     const validatedData = userValidationSchema.parse(req.body);
 

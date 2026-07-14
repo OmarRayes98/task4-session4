@@ -24,3 +24,6 @@ export const userValidationSchema = z.object({
     )
     .regex(/^\S*$/, "Password must not contain spaces"), // No spaces allowed
 });
+
+
+export type CreateUserInput = z.infer<typeof userValidationSchema>;
