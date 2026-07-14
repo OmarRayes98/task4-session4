@@ -1,8 +1,14 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 import { z } from "zod";
 import User from "../models/user.model";
 import { userValidationSchema } from "../validations/user.schema";
+
+const hashPassword = async (password: string): Promise<string> => {
+  const saltRounds = 10;
+  return bcrypt.hash(password, saltRounds);
+};
 
 // Create a new user
 export const createUser = async (
@@ -12,8 +18,9 @@ export const createUser = async (
   try {
     // Validate request body using Zod
     const validatedData = userValidationSchema.parse(req.body);
+    const hashedPassword = await hashPassword(validatedData.password);
 
-    const newUser = new User(validatedData);
+    const newUser = new User({ ...validatedData, password: hashedPassword });
     await newUser.save();
 
     res
@@ -110,8 +117,17 @@ export const updateUser = async (
     // Validate incoming data
     const validatedData = userValidationSchema.partial().parse(req.body); // partial() allows updating only specific fields
 
-    const updatedUser = await User.findByIdAndUpdate(id, validatedData, {
-      new: true,
+    const updateData: Record<string, unknown> = { ...validatedData };
+
+    if (
+      typeof updateData.password === "string" &&
+      updateData.password.trim() !== ""
+    ) {
+      updateData.password = await hashPassword(updateData.password);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      returnDocument: "after",
     });
 
     if (!updatedUser) {
