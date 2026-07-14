@@ -13,7 +13,8 @@ The API provides CRUD operations with:
 - User search by email
 
 The project uses Node.js v24 and MongoDB.
-
+**and add rate limit for login and register for protect 
+**
 ---
 
 # Installation
